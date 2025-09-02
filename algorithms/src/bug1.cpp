@@ -171,7 +171,7 @@ private:
 
     size_t i_ = 0; 
     int diagonalEdges_;
-    float pose_x_ = 0.0, pose_y_ = -1.0, pose_z_ = 0.0;
+    float pose_x_ = 0.0, pose_y_ = -0.2, pose_z_ = 0.0;
     float distanceToObstacle_;
     int decimals = 0, iterations_before_verification = 10;
 
@@ -264,17 +264,18 @@ private:
         std::unordered_map<std::pair<float, float>, std::unordered_set<std::pair<float, float>, PairHash>, PairHash> adjacency_list;
         std::pair<float, float> first_obstacle;
 
-        
+         
       
         do
         {
             std::pair<float, float> temp;
             int i = 0;
+            
             // visited_obstacles.clear();
 
             // visited_points.clear();
             adjacency_list.clear();
-
+           
 
             visited_obstacles.insert(actual_obstacle);
             first_obstacle = actual_obstacle;
@@ -323,7 +324,7 @@ private:
             }
 
 
-            while(i < 50000)
+            while(i < 5000)
             {
 
                 for (int a = 0; a < 8; a++) 
@@ -420,6 +421,13 @@ private:
                         actual_point = neighbor_tuple;
                         visited_points.insert(neighbor_tuple);
                         std::this_thread::sleep_for(std::chrono::milliseconds(2));
+                        
+                        
+                        publish_created_vertices2();
+                    
+                    }
+                    else if(obstaclesVertices.find(neighbor_tuple) == obstaclesVertices.end())
+                    {
                         float temp_distance = heuristic(neighbor_tuple, goal_pose);
 
                         if(temp_distance < distance)
@@ -427,9 +435,6 @@ private:
                             distance = temp_distance;
                             closer_point = neighbor_tuple;
                         }
-                        
-                        publish_created_vertices2();
-                    
                     }
 
                 }
@@ -502,8 +507,6 @@ private:
         path.push_back(goal_pose);
 
 
-
-            
 
         publish_created_vertices();
         publish_created_vertices2();

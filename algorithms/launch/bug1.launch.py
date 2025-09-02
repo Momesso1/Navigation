@@ -16,10 +16,10 @@ def generate_launch_description():
         'rviz'
     )
 
-    output_file = os.path.join(config_dir, 'turtlebot3_house_with_boxes.bin')
+    output_file = os.path.join(config_dir, 'map_2.bin')
     pose_file = os.path.join(config_dir, 'locations.yaml')
-    map_filename = os.path.join(config_dir, 'map.yaml')
-    map_pgm_filename = os.path.join(config_dir, 'map.pgm')
+    map_filename = os.path.join(config_dir, 'map_2.yaml')
+    map_pgm_filename = os.path.join(config_dir, 'map_2.pgm')
 
     rviz_file = os.path.join(rviz_dir, "bug1.rviz")
 
