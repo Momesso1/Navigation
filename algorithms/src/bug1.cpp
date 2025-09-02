@@ -153,6 +153,7 @@ private:
     //Publishers.
     rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr publisher_path_;
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr publisher_nav_path_;
+    rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr publisher_path_without_filter_;
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr publisher_created_vertices;
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr publisher_created_vertices1;
 
@@ -176,6 +177,7 @@ private:
 
     std::vector<VertexDijkstra> verticesDestino_;
     std::vector<VertexDijkstra> verticesDijkstra;
+    std::vector<VertexDijkstra> path_points;
 
     std::unordered_set<std::pair<float, float>, PairHash> obstaclesVertices;
 
@@ -230,7 +232,12 @@ private:
 
     std::vector<std::pair<float, float>> bug1(std::pair<float, float> initial_pose, std::pair<float, float> goal_pose)
     {
-        
+        path_points.clear();
+        verticesDijkstra.clear();
+
+        publisher_path_without_filter();
+        publisher_dijkstra();
+        publisher_dijkstra_path();
 
         std::pair<float, float> actual_obstacle = straight_line_to_obstacle(initial_pose, goal_pose);
         std::vector<std::pair<float, float>> path;
@@ -639,6 +646,51 @@ private:
     void store_edges_in_path(std::vector<std::pair<float, float>>& path) 
     {
         verticesDijkstra.clear();
+        path_points.clear();
+
+        for (size_t i = 0; i < path.size(); i++) 
+        {
+            VertexDijkstra vertex;
+            
+            vertex.x = std::get<0>(path[i]);
+            vertex.y = std::get<1>(path[i]);
+
+            if (i < path.size() - 1) 
+            {
+                const std::pair<float, float>& current_vertex = path[i];
+                const std::pair<float, float>& next_vertex = path[i + 1];
+
+                float dx = std::get<0>(next_vertex) - std::get<0>(current_vertex);
+                float dy = std::get<1>(next_vertex) - std::get<1>(current_vertex);
+                float distance = std::sqrt(dx * dx + dy * dy);
+
+                if (distance > 0.0f) {
+                    dx /= distance;
+                    dy /= distance;
+                }
+
+                Eigen::Vector3f direction(dx, dy, 0.0f);
+                Eigen::Vector3f reference(1.0f, 0.0f, 0.0f); 
+
+                Eigen::Quaternionf quaternion = Eigen::Quaternionf::FromTwoVectors(reference, direction);
+
+                vertex.orientation_x = quaternion.x();
+                vertex.orientation_y = quaternion.y();
+                vertex.orientation_z = quaternion.z();
+                vertex.orientation_w = quaternion.w();
+            } 
+            else 
+            {
+                vertex.orientation_x = 0.0;
+                vertex.orientation_y = 0.0;
+                vertex.orientation_z = 0.0;
+                vertex.orientation_w = 1.0;
+            }
+
+            path_points.push_back(vertex);
+        }
+
+        publisher_path_without_filter();
         
         if (path.empty()) {
             return;
@@ -808,6 +860,32 @@ private:
         publisher_path_->publish(message);
     }
 
+    void publisher_path_without_filter()
+    {
+        nav_msgs::msg::Path path_msg;
+        path_msg.header.stamp = this->now();
+        path_msg.header.frame_id = "map";
+
+        for (const auto& vertex : path_points)
+        {
+            geometry_msgs::msg::PoseStamped pose_stamped;
+            pose_stamped.header.stamp = this->now();
+            pose_stamped.header.frame_id = "map";
+            
+            pose_stamped.pose.position.x = vertex.x;
+            pose_stamped.pose.position.y = vertex.y;
+            pose_stamped.pose.position.z = 0.0  ;
+            pose_stamped.pose.orientation.x = vertex.orientation_x;
+            pose_stamped.pose.orientation.y = vertex.orientation_y;
+            pose_stamped.pose.orientation.z = vertex.orientation_z;
+            pose_stamped.pose.orientation.w = vertex.orientation_w;
+            
+            path_msg.poses.push_back(pose_stamped);
+        }
+
+        publisher_path_without_filter_->publish(path_msg);
+    }
+
     void publisher_dijkstra_path()
     {
         nav_msgs::msg::Path path_msg;
@@ -951,6 +1029,8 @@ private:
                  std::vector<std::pair<float, float>> shortestPath = bug1(initial_pose, goal_pose);
             
                 store_edges_in_path(shortestPath);
+
+                std::this_thread::sleep_for(std::chrono::seconds(2));
             
                 auto end_time = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<float> duration = end_time - start_time_;  
@@ -1059,7 +1139,8 @@ public:
         subscription_navigable_removed_vertices = this->create_subscription<sensor_msgs::msg::PointCloud2>(
             "/obstacles_vertices", 10, std::bind(&AStar::callback_removed_navigable_vertices, this, std::placeholders::_1));
 
-        publisher_nav_path_ = this->create_publisher<nav_msgs::msg::Path>("visualize_path", 10);
+        publisher_nav_path_ = this->create_publisher<nav_msgs::msg::Path>("/filtered_path", 10);
+        publisher_path_without_filter_ = this->create_publisher<nav_msgs::msg::Path>("/path_without_filter", 10);
 
         publisher_path_ = this->create_publisher<geometry_msgs::msg::PoseArray>("/path", 10);
         

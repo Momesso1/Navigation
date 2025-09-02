@@ -112,7 +112,8 @@ target_link_libraries(create_graph_with_chuncks
 install(
  
   DIRECTORY
- 
+  
+  rviz
   launch
   config
   DESTINATION share/${PROJECT_NAME}

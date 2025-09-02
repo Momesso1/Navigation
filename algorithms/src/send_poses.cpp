@@ -39,6 +39,7 @@ private:
     std::vector<geometry_msgs::msg::Pose> dockingDestinations_;
 
     bool docking_;
+    std::string filename = " ";
 
     // Função para carregar as localizações do arquivo YAML
     void load_locations_from_yaml(const std::string &file_path)
@@ -173,11 +174,13 @@ public:
   SendPoses()
   : Node("send_poses")
   {
+    this->declare_parameter<std::string>("pose_file", " ");
     this->declare_parameter<bool>("docking", false);
+    
+    filename = this->get_parameter("pose_file").as_string();
     docking_ = this->get_parameter("docking").get_parameter_value().get<bool>();
 
-
-    
+    RCLCPP_INFO(this->get_logger(), "pose_file is set to %s", filename.c_str());
 
     parameterTimer = this->create_wall_timer(1s, std::bind(&SendPoses::check_parameters, this));
 
@@ -190,8 +193,7 @@ public:
     odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
       "/rtabmap/odom", 10, std::bind(&SendPoses::odom_callback, this, std::placeholders::_1));
 
-    const std::string yaml_file_path = "/home/momesso/navigation/src/algorithms/config/locations.yaml";
-    load_locations_from_yaml(yaml_file_path);
+    load_locations_from_yaml(filename);
   }
 };
 
