@@ -43,6 +43,9 @@ ament_target_dependencies(send_poses rclcpp nav_msgs geometry_msgs PCL pcl_conve
 add_executable(bug1 src/bug1.cpp)
 ament_target_dependencies(bug1 rclcpp nav_msgs geometry_msgs PCL pcl_conversions sensor_msgs tf2_geometry_msgs tf2 tf2_ros tf2_sensor_msgs tf2_ros tf2_eigen PCL Eigen3)
 
+add_executable(bug2 src/bug2.cpp)
+ament_target_dependencies(bug2 rclcpp nav_msgs geometry_msgs PCL pcl_conversions sensor_msgs tf2_geometry_msgs tf2 tf2_ros tf2_sensor_msgs tf2_ros tf2_eigen PCL Eigen3)
+
 add_executable(create_graph src/create_graph.cpp)
 ament_target_dependencies(create_graph rclcpp nav_msgs geometry_msgs PCL pcl_conversions sensor_msgs tf2_geometry_msgs tf2 tf2_ros tf2_sensor_msgs tf2_ros tf2_eigen PCL Eigen3)
 
@@ -64,6 +67,14 @@ target_link_libraries(send_poses
 )
 
 target_link_libraries(bug1
+  ${rclcpp_LIBRARIES}
+  ${std_msgs_LIBRARIES}
+  ${GLEW_LIBRARIES}
+  ${PCL_LIBRARIES}
+  yaml-cpp
+)
+
+target_link_libraries(bug2
   ${rclcpp_LIBRARIES}
   ${std_msgs_LIBRARIES}
   ${GLEW_LIBRARIES}
@@ -123,6 +134,7 @@ install(
 install(TARGETS
   controller
   bug1
+  bug2
   send_poses
   create_graph
   load_all_points_to_cache
