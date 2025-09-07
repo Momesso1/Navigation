@@ -1030,6 +1030,13 @@ private:
             if(!obstaclesVertices.empty())
             {
                  std::vector<std::pair<float, float>> shortestPath = bug1(initial_pose, goal_pose);
+
+                  visited_points.clear();
+                visited_obstacles.clear();
+
+                publish_created_vertices();
+                publish_created_vertices2();
+                    
             
                 store_edges_in_path(shortestPath);
 
