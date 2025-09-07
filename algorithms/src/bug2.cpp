@@ -1212,7 +1212,7 @@ private:
         auto end_time1 = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float> duration1 = end_time1 - start_time1_; 
 
-        RCLCPP_INFO(this->get_logger(), "Bug 1 filter execution time: %.10f", duration1.count());
+        RCLCPP_INFO(this->get_logger(), "Bug 2 filter execution time: %.10f", duration1.count());
 
        
 
@@ -1577,7 +1577,7 @@ private:
    
 public:
     AStar()
-     : Node("Bug_1")
+     : Node("Bug_2")
     {
         this->declare_parameter<double>("path_resolution", 0.05);
         this->declare_parameter<int>("diagonalEdges", 3);
