@@ -188,15 +188,11 @@ private:
        
     }
 
-    bool published = false;
-
+   
     void publishPointCloud() {
         if (occupied_points_.empty()) return;
 
-        if(published == true)
-        {
-            return;
-        }
+      
         sensor_msgs::msg::PointCloud2 cloud;
         cloud.header.stamp = this->get_clock()->now();
         cloud.header.frame_id = "world";
@@ -225,7 +221,7 @@ private:
 
         
 
-        published = true;
+       
         publisher_->publish(cloud);
     }
 };
