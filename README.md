@@ -42,3 +42,7 @@ Bug 2:
 D*:
 
 [Screencast from 2025-11-08 18-31-57.webm](https://github.com/user-attachments/assets/9ff9e751-b87d-43d9-a2ad-232b7186d60f)
+
+RRT:
+
+[rrt.webm](https://github.com/user-attachments/assets/b823e9f3-4336-4674-91c5-793b633356d4)
