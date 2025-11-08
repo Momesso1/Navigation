@@ -1,3 +1,6 @@
+
+O rosbag do D* é grande demais para mandar pra o github (100MB).
+
 Bug 1:
 
 
@@ -26,10 +29,6 @@ ros2 bag play src/algorithms/bug1_rosbag/
 Bug 2:
 
 ros2 bag play src/algorithms/bug2_rosbag/
-
-D*:
-
-ros2 bag play src/algorithms/d_star_rosbag/
 
 Bug 1:
 
