@@ -11,6 +11,12 @@ Bug 2:
 
 ros2 launch algorithms bug2.launch.py
 
+D*
+
+. install/setup.bash
+
+ros2 launch algorithms d_star.launch.py
+
 Rosbag:
 
 Bug 1:
@@ -21,6 +27,10 @@ Bug 2:
 
 ros2 bag play src/algorithms/bug2_rosbag/
 
+D*:
+
+ros2 bag play src/algorithms/d_star_rosbag/
+
 Bug 1:
 
 [Screencast from 2025-09-07 09-22-22.webm](https://github.com/user-attachments/assets/84417b6c-d93b-43ba-9606-9bfba654337d)
@@ -29,3 +39,7 @@ Bug 1:
 Bug 2:
 
 [Screencast from 2025-09-07 09-21-10.webm](https://github.com/user-attachments/assets/9966f07b-9872-4cfe-be7e-4c17e56d133b)
+
+D*:
+
+[Screencast from 2025-11-08 18-31-57.webm](https://github.com/user-attachments/assets/9ff9e751-b87d-43d9-a2ad-232b7186d60f)
