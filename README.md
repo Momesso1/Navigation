@@ -1,7 +1,7 @@
+Entre as linhas 400 e 534 o D* é feito de fato. O A* é feito normalmente na primeira vez, mas depois é checado se um obstaculo apareceu no caminho, caso não tenha aparecido, então manda o mesmo caminho, caso tenha aparecido, então um novo caminho é feito com o ponto inicial um pouco antes do obstaculo e o ponto final é um pouco depois do obstaculo, depois disso os caminhos de juntam. Depois disso o caminho reutilizado e os caminhos feitos apenas para contornar os obstaculos são unidos.
 
-O rosbag do D* é grande demais para mandar pra o github (100MB).
 
-Bug 1:
+Bug 1: 
 
 
 . install/setup.bash
