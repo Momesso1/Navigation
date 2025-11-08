@@ -37,7 +37,8 @@ Bug 1:
 
 Bug 2:
 
-[Screencast from 2025-11-08 18-46-49.webm](https://github.com/user-attachments/assets/578a07fc-718f-4fd3-9cac-3f512d866eb9)
+[Screencast from 2025-09-07 09-21-10.webm](https://github.com/user-attachments/assets/87b6bb62-c330-4c09-af49-6abb5231213a)
+
 
 
 D*:
