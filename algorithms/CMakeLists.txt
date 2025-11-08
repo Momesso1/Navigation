@@ -58,6 +58,12 @@ ament_target_dependencies(publish_grid_map rclcpp nav_msgs geometry_msgs PCL pcl
 add_executable(create_graph_with_chuncks src/create_graph_with_chuncks.cpp)
 ament_target_dependencies(create_graph_with_chuncks rclcpp nav_msgs geometry_msgs PCL pcl_conversions sensor_msgs tf2_geometry_msgs tf2 tf2_ros tf2_sensor_msgs tf2_ros tf2_eigen PCL Eigen3)
 
+add_executable(create_obstacle_graph_with_occupancy_map src/create_obstacle_graph_with_occupancy_map.cpp)
+ament_target_dependencies(create_obstacle_graph_with_occupancy_map rclcpp nav_msgs geometry_msgs PCL pcl_conversions OpenCV sensor_msgs tf2_geometry_msgs tf2 tf2_ros tf2_sensor_msgs tf2_ros tf2_eigen PCL Eigen3)
+
+add_executable(d_star src/d_star.cpp)
+ament_target_dependencies(d_star rclcpp nav_msgs geometry_msgs PCL pcl_conversions OpenCV sensor_msgs tf2_geometry_msgs tf2 tf2_ros tf2_sensor_msgs tf2_ros tf2_eigen PCL Eigen3)
+
 target_link_libraries(send_poses
   ${rclcpp_LIBRARIES}
   ${std_msgs_LIBRARIES}
@@ -120,6 +126,22 @@ target_link_libraries(create_graph_with_chuncks
   ${PCL_LIBRARIES}
 )
 
+target_link_libraries(create_obstacle_graph_with_occupancy_map
+  ${rclcpp_LIBRARIES}
+  ${std_msgs_LIBRARIES}
+  ${GLEW_LIBRARIES}
+  ${PCL_LIBRARIES}
+  yaml-cpp
+)
+
+target_link_libraries(d_star
+  ${rclcpp_LIBRARIES}
+  ${std_msgs_LIBRARIES}
+  ${GLEW_LIBRARIES}
+  ${PCL_LIBRARIES}
+  yaml-cpp
+)
+
 install(
  
   DIRECTORY
@@ -140,6 +162,8 @@ install(TARGETS
   load_all_points_to_cache
   publish_grid_map
   create_graph_with_chuncks
+  create_obstacle_graph_with_occupancy_map
+  d_star
   DESTINATION lib/${PROJECT_NAME}
 )
 
